@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:id="@+id/clActMainRoot"
+    tools:context="com.minkiapps.livetranslator.MainActivity">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/pvActMainScanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.minkiapps.livetranslator.overlay.ScannerOverlayImpl
+        android:id="@+id/olActMain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <View
+        android:id="@+id/vActMainToolTipAnchor"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintWidth_percent="0.3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_bias="0.22"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabActMainTorch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:fabSize="mini"
+        app:maxImageSize="20dp"
+        android:src="@drawable/ic_baseline_flash_on_24dp_white"
+        app:layout_constraintBottom_toTopOf="@+id/tvActMainBuildInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvActMainBuildInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/clActMainTranslatePreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="1.0.1 (10)" />
+
+    <LinearLayout
+        android:layout_margin="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="8dp"
+            android:src="@drawable/ic_chinese"
+            app:tint="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ivActMainToggleTranslation"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            app:tint="@color/white"
+            android:src="@drawable/ic_baseline_arrow_right_alt_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="8dp"
+            app:tint="@color/white"
+            android:src="@drawable/ic_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clActMainTranslatePreview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?colorOnPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/pvActMainScanner"
+        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:id="@+id/llActMainTranslatePreview"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginTop="64dp"
+                    android:id="@+id/tvActMainPreviewChinese"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:textSize="18sp"
+                    android:textIsSelectable="true"
+                    android:hint="@string/recognised_text_hint"/>
+
+                <ImageView
+                    app:tint="?colorOnBackground"
+                    android:rotation="90"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_arrow_right_alt_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvActMainPreviewEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:textSize="18sp"
+                    android:textIsSelectable="true"
+                    android:hint="@string/translated_text_hint" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            app:switchPadding="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/freeze_text"
+            android:id="@+id/swActMainTextFreeze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvActMainFreezeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="end"
+            android:hint="@string/freeze_text_tap"
+            app:layout_constraintBottom_toBottomOf="@+id/swActMainTextFreeze"
+            app:layout_constraintEnd_toStartOf="@+id/swActMainTextFreeze"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swActMainTextFreeze"
+            app:switchPadding="8dp" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/ivMainTTS"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_volume_up_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="?colorOnBackground"
+            tools:ignore="ContentDescription" />
+
+        <ProgressBar
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/pbMainTTSProgress"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        tools:visibility="gone"
+        android:id="@+id/clActMainDownloadContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?colorOnPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/pvActMainScanner"
+        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1">
+
+        <TextView
+            android:layout_marginTop="32dp"
+            android:id="@+id/tvDownloadChineseModelHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:gravity="center"
+            android:text="@string/download_chinese_model_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/pBActMainDownloadChineseModel"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:max="100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDownloadChineseModelHint"
+            tools:progress="25" />
+
+        <TextView
+            android:layout_marginTop="32dp"
+            android:id="@+id/tvDownloadEnglishModelHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:gravity="center"
+            android:text="@string/download_english_model_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBActMainDownloadChineseModel" />
+
+        <ProgressBar
+            android:id="@+id/pBActMainDownloadEnglishModel"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:max="100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDownloadEnglishModelHint"
+            tools:progress="25" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/download_model_online_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBActMainDownloadEnglishModel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
