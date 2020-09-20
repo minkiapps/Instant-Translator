@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import com.huawei.hms.mlsdk.tts.MLTtsError
 import com.minkiapps.livetranslator.analyser.OcrAnalyser
 import com.minkiapps.livetranslator.tooltip.ScanRectTooltip
+import com.minkiapps.livetranslator.utils.hasInternetConnection
 import com.minkiapps.livetranslator.utils.isHUAWEIManufacturer
 import com.minkiapps.livetranslator.utils.isHmsAvailable
 import it.sephiroth.android.library.xtooltip.ClosePolicy
@@ -109,6 +110,10 @@ class MainActivity : AppCompatActivity() {
 
             ivMainTTS.setOnClickListener { view ->
                 if(view.tag == null) {
+                    if(!hasInternetConnection()) {
+                        Toast.makeText(this, R.string.tts_no_internet, Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
                     pbMainTTSProgress.isVisible = true
                     swActMainTextFreeze.isEnabled = false
                     ivMainTTS.setImageResource(R.drawable.ic_baseline_stop_24)

@@ -17,4 +17,6 @@
     <string name="recognised_text_hint">Scanned text appears here</string>
     <string name="translated_text_hint">Translated text appears here</string>
 
+    <string name="tts_no_internet">You need internet connection to use text to speech.</string>
+
 </resources>
