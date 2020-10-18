@@ -9,3 +9,8 @@
 .cxx
 local.properties
 /distribution
+
+*.lock
+/fastlane/Fastfile
+/fastlane/README.md
+/fastlane/report.xml

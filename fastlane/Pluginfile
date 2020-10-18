@@ -1,0 +1,4 @@
+gem 'fastlane-plugin-increment_version_code'
+gem 'fastlane-plugin-commit_android_version_bump'
+
+gem 'fastlane-plugin-huawei_appgallery_connect'
