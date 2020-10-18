@@ -19,6 +19,7 @@ import com.minkiapps.livetranslator.tooltip.ScanRectTooltip
 import com.minkiapps.livetranslator.utils.hasInternetConnection
 import com.minkiapps.livetranslator.utils.isHUAWEIManufacturer
 import com.minkiapps.livetranslator.utils.isHmsAvailable
+import com.minkiapps.livetranslator.utils.setRotateView180OnClick
 import it.sephiroth.android.library.xtooltip.ClosePolicy
 import it.sephiroth.android.library.xtooltip.Tooltip
 import kotlinx.android.synthetic.main.activity_main.*
@@ -133,12 +134,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //ivActMainToggleTranslation.setRotateView180OnClick { //TODO https://github.com/HMS-Core/hms-ml-demo/issues/27
-        //    analyser.translationType = when(analyser.translationType) {
-        //        OcrAnalyser.Translation.CN_EN -> OcrAnalyser.Translation.EN_CN
-        //        OcrAnalyser.Translation.EN_CN -> OcrAnalyser.Translation.CN_EN
-        //    }
-        //}
+        ivActMainToggleTranslation.setRotateView180OnClick { //TODO https://github.com/HMS-Core/hms-ml-demo/issues/27
+            analyser.translationType = when(analyser.translationType) {
+                OcrAnalyser.Translation.CN_EN -> OcrAnalyser.Translation.EN_CN
+                OcrAnalyser.Translation.EN_CN -> OcrAnalyser.Translation.CN_EN
+            }
+        }
 
         startCamera()
         showToolTip()
