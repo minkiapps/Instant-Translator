@@ -7,7 +7,7 @@ import android.util.Pair
 import com.huawei.hms.mlsdk.tts.*
 import timber.log.Timber
 
-class TTSWrapperKotlin {
+class TTSWrapper {
 
     private lateinit var mlCNTtsEngine: MLTtsEngine
     private lateinit  var mlENTtsEngine: MLTtsEngine
@@ -59,7 +59,7 @@ class TTSWrapperKotlin {
                 Timber.d(s)
             }
 
-            override fun onEvent(taskId: String, eventName: Int, bundle: Bundle) {
+            override fun onEvent(taskId: String, eventName: Int, bundle: Bundle?) {
                 when (eventName) {
                     MLTtsConstants.EVENT_PLAY_STOP -> if (ttsListener != null) {
                         handler.post { ttsListener?.onSpeechEnded() }
@@ -102,7 +102,7 @@ class TTSWrapperKotlin {
                 Timber.d(s)
             }
 
-            override fun onEvent(taskId: String, eventName: Int, bundle: Bundle) {
+            override fun onEvent(taskId: String, eventName: Int, bundle: Bundle?) {
                 when (eventName) {
                     MLTtsConstants.EVENT_PLAY_STOP -> if (ttsListener != null) {
                         handler.post { ttsListener?.onSpeechEnded() }
