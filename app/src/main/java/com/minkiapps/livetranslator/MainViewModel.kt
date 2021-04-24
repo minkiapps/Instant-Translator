@@ -10,13 +10,18 @@ import com.huawei.hms.mlsdk.model.download.MLModelDownloadStrategy
 import com.huawei.hms.mlsdk.model.download.MLRemoteModel
 import com.huawei.hms.mlsdk.translate.local.MLLocalTranslatorModel
 import com.huawei.hms.mlsdk.tts.MLTtsLocalModel
+import com.minkiapps.livetranslator.prefs.AppPres
 import com.minkiapps.livetranslator.translation.mlLangModels
 import com.minkiapps.livetranslator.utils.await
 import kotlinx.coroutines.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import kotlin.math.round
 
-class MainViewModel : ViewModel() {
+class MainViewModel : ViewModel(), KoinComponent {
+
+    private val appPrefs : AppPres by inject()
 
     private val manager = MLLocalModelManager.getInstance()
 
@@ -31,7 +36,15 @@ class MainViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             try {
-                initModels()
+                if(appPrefs.isAllModelsDownloaded()) {
+                    modelReadyData.postValue(true)
+                    //need to call this logic no matter models are downloaded or not... dunno why
+                    initModels()
+                } else {
+                    initModels()
+                    appPrefs.setAllModelsDownloaded()
+                    modelReadyData.postValue(true)
+                }
             } catch (e : Exception) {
                 Timber.e(e, "Failed to download language models")
             }
@@ -44,15 +57,21 @@ class MainViewModel : ViewModel() {
             Timber.d("Available Translator models: ${manager.getModels(MLLocalTranslatorModel::class.java).await()}")
         }
 
+        val modelExistsDeferred : MutableList<Deferred<Unit>> = ArrayList(mlLangModels.size * 2)
         mlLangModels.map { m ->
-            if(!manager.isModelExist(m.translatorModel).await()) {
-                modelDownLoadProgresses[m.translatorModel] = 0
-            }
+            modelExistsDeferred.add(async {
+                if(!manager.isModelExist(m.translatorModel).await()) {
+                    modelDownLoadProgresses[m.translatorModel] = 0
+                }
+            })
 
-            if(!manager.isModelExist(m.ttsModel).await()) {
-                modelDownLoadProgresses[m.ttsModel] = 0
-            }
+            modelExistsDeferred.add(async {
+                if(!manager.isModelExist(m.ttsModel).await()) {
+                    modelDownLoadProgresses[m.ttsModel] = 0
+                }
+            })
         }
+        modelExistsDeferred.awaitAll()
 
         val deferredList = modelDownLoadProgresses.map { m ->
             async(Dispatchers.IO) {
@@ -71,7 +90,6 @@ class MainViewModel : ViewModel() {
         }
 
         deferredList.awaitAll()
-        modelReadyData.postValue(true)
     }
 
     private fun downloadRemoteModel(model: MLRemoteModel) {

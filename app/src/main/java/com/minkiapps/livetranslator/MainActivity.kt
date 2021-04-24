@@ -18,7 +18,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.huawei.hms.mlsdk.tts.MLTtsError
 import com.minkiapps.livetranslator.analyser.OcrAnalyser
-import com.minkiapps.livetranslator.tooltip.ScanRectTooltip
+import com.minkiapps.livetranslator.prefs.AppPres
+import com.minkiapps.livetranslator.tooltip.AppTooltip
 import com.minkiapps.livetranslator.tooltip.showAndOnHiddenAwait
 import com.minkiapps.livetranslator.translation.toUIString
 import com.minkiapps.livetranslator.translation.translationList
@@ -28,6 +29,7 @@ import com.minkiapps.livetranslator.utils.isHmsAvailable
 import it.sephiroth.android.library.xtooltip.Tooltip
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.util.concurrent.Executors
 
@@ -36,13 +38,16 @@ class MainActivity : AppCompatActivity() {
     private var torchOn: Boolean = false
     private val analyserExecutor = Executors.newSingleThreadExecutor()
 
-    private val toolTip by lazy { ScanRectTooltip(this) }
+    private val toolTip : AppTooltip by inject()
+
     private val analyser: OcrAnalyser by lazy {
         OcrAnalyser(olActMain)
     }
 
     private val mainViewModel: MainViewModel by viewModels()
     private val ttsWrapper = TTSWrapper()
+
+    private val appPrefs : AppPres by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,10 +98,9 @@ class MainActivity : AppCompatActivity() {
             swActMainTextFreeze.setText(if (analyser.freeze) R.string.frozen_text else R.string.freeze_text)
         }
 
-        translationList.getOrNull(0)?.let {
-            tvActMainTranslation.text = it.toUIString(this)
-        }
-
+        val lastTranslation = appPrefs.getLastTranslation()
+        analyser.translation = lastTranslation
+        tvActMainTranslation.text = lastTranslation.toUIString(this)
         tvActMainTranslation.setOnClickListener {
             val arrayAdapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item)
             translationList.forEach {
@@ -110,6 +114,7 @@ class MainActivity : AppCompatActivity() {
                     val translation = translationList[which]
                     analyser.translation = translation
                     tvActMainTranslation.text = translation.toUIString(this)
+                    appPrefs.saveTranslation(translation)
 
                     dialog.dismiss()
                 }

@@ -1,6 +1,7 @@
 package com.minkiapps.livetranslator.tooltip
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
@@ -9,9 +10,7 @@ import it.sephiroth.android.library.xtooltip.ClosePolicy
 import it.sephiroth.android.library.xtooltip.Tooltip
 import kotlinx.android.synthetic.main.activity_main.*
 
-class ScanRectTooltip(context : Context) {
-
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+class AppTooltip(private val prefs : SharedPreferences) {
 
     fun shouldShowTooltip() : Boolean {
         val maxShown = prefs.getInt(PREF_MAX_SHOW_NO, 0)

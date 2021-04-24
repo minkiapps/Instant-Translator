@@ -119,13 +119,13 @@ class TTSWrapper {
     }
 
     fun stop() {
-        mlENTtsEngine.stop()
-        mlCNTtsEngine.stop()
+        //mlENTtsEngine.stop()
+        //mlCNTtsEngine.stop()
     }
 
     fun shutdown() {
-        mlENTtsEngine.shutdown()
-        mlCNTtsEngine.shutdown()
+        //mlENTtsEngine.shutdown()
+        //mlCNTtsEngine.shutdown()
     }
 
     fun setTtsListener(ttsListener: TTSListener) {

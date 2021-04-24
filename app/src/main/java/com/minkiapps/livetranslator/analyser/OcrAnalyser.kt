@@ -12,7 +12,6 @@ import com.huawei.hms.mlsdk.common.MLFrame
 import com.minkiapps.livetranslator.overlay.ScannerOverlay
 import com.minkiapps.livetranslator.translation.Translation
 import com.minkiapps.livetranslator.translation.TranslationFactory
-import com.minkiapps.livetranslator.translation.translationList
 import com.minkiapps.livetranslator.utils.BitmapUtil
 import com.minkiapps.livetranslator.utils.FrameMetadata
 import com.minkiapps.livetranslator.utils.YuvNV21Util
@@ -31,7 +30,7 @@ class OcrAnalyser(private val scannerOverlay: ScannerOverlay) : ImageAnalysis.An
     var freeze : Boolean = false
 
     @Volatile
-    var translation : Translation = translationList.getOrElse(0) { Translation("en","zh") }
+    lateinit var translation : Translation
 
     @SuppressLint("UnsafeExperimentalUsageError")
     override fun analyze(imageProxy: ImageProxy) {

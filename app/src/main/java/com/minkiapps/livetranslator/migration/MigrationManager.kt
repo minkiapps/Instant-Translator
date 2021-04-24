@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.minkiapps.livetranslator.tooltip.ScanRectTooltip
-import com.minkiapps.livetranslator.tooltip.ScanRectTooltip.Companion.PREF_MAX_SHOW_NO
+import com.minkiapps.livetranslator.tooltip.AppTooltip
+import com.minkiapps.livetranslator.tooltip.AppTooltip.Companion.PREF_MAX_SHOW_NO
 import timber.log.Timber
 
 object MigrationManager {
@@ -26,7 +26,7 @@ object MigrationManager {
         Timber.d("Migration from last version: $lastVersion")
         if (CURRENT_VERSION >= 1 && lastVersion == VERSION_NONE) {
             defaultPrefs.edit(commit = true) { //decrease max shown by 1 so it will trigger a new tooltip
-                putInt(PREF_MAX_SHOW_NO, ScanRectTooltip.MAX_SHOW_DRAGGING_NO - 1)
+                putInt(PREF_MAX_SHOW_NO, AppTooltip.MAX_SHOW_DRAGGING_NO - 1)
             }
         }
 
