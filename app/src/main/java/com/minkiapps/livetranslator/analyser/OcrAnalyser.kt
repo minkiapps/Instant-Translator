@@ -8,14 +8,11 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.*
 import com.huawei.hmf.tasks.Tasks
-import com.huawei.hms.mlsdk.MLAnalyzerFactory
 import com.huawei.hms.mlsdk.common.MLFrame
-import com.huawei.hms.mlsdk.text.MLLocalTextSetting
-import com.huawei.hms.mlsdk.text.MLTextAnalyzer
-import com.huawei.hms.mlsdk.translate.MLTranslatorFactory
-import com.huawei.hms.mlsdk.translate.local.MLLocalTranslateSetting
-import com.huawei.hms.mlsdk.translate.local.MLLocalTranslator
 import com.minkiapps.livetranslator.overlay.ScannerOverlay
+import com.minkiapps.livetranslator.translation.Translation
+import com.minkiapps.livetranslator.translation.TranslationFactory
+import com.minkiapps.livetranslator.translation.translationList
 import com.minkiapps.livetranslator.utils.BitmapUtil
 import com.minkiapps.livetranslator.utils.FrameMetadata
 import com.minkiapps.livetranslator.utils.YuvNV21Util
@@ -27,36 +24,6 @@ class OcrAnalyser(private val scannerOverlay: ScannerOverlay) : ImageAnalysis.An
     private val mutableLiveData = MutableLiveData<TranslationText>()
     private val errorData = MutableLiveData<Exception>()
 
-    private val enTextRecognizer : MLTextAnalyzer by lazy {
-        MLAnalyzerFactory.getInstance().localTextAnalyzer
-    }
-
-    private val cnTextRecognizer : MLTextAnalyzer by lazy {
-        val setting = MLLocalTextSetting.Factory()
-            .setOCRMode(MLLocalTextSetting.OCR_DETECT_MODE)
-            .setLanguage("zh")
-            .create()
-        MLAnalyzerFactory.getInstance().getLocalTextAnalyzer(setting)
-    }
-
-    private val cnENTranslator : MLLocalTranslator by lazy {
-        val factory =
-            MLLocalTranslateSetting.Factory()
-                .setSourceLangCode("zh")
-                .setTargetLangCode("en")
-
-        MLTranslatorFactory.getInstance().getLocalTranslator(factory.create())
-    }
-
-    private val enCnTranslator : MLLocalTranslator by lazy {
-        val factory =
-            MLLocalTranslateSetting.Factory()
-                .setSourceLangCode("en")
-                .setTargetLangCode("zh")
-
-        MLTranslatorFactory.getInstance().getLocalTranslator(factory.create())
-    }
-
     fun liveData() : LiveData<TranslationText> = mutableLiveData
     fun errorLiveData() : LiveData<Exception> = errorData
 
@@ -64,7 +31,7 @@ class OcrAnalyser(private val scannerOverlay: ScannerOverlay) : ImageAnalysis.An
     var freeze : Boolean = false
 
     @Volatile
-    var translationType : Translation = Translation.CN_EN
+    var translation : Translation = translationList.getOrElse(0) { Translation("en","zh") }
 
     @SuppressLint("UnsafeExperimentalUsageError")
     override fun analyze(imageProxy: ImageProxy) {
@@ -95,21 +62,14 @@ class OcrAnalyser(private val scannerOverlay: ScannerOverlay) : ImageAnalysis.An
                 )
             )
 
-            val type = translationType
-            val recogniser = when(type) {
-                Translation.CN_EN -> cnTextRecognizer
-                Translation.EN_CN -> enTextRecognizer
-            }
+            val recogniser = TranslationFactory.getRecogniser(translation)
 
             val mlText = Tasks.await(recogniser.asyncAnalyseFrame(MLFrame.fromBitmap(bitmap)))
             Timber.d("Recognised Text: ${mlText.stringValue}")
             val toTranslate = mlText.stringValue.replace("\n"," ")
 
             if(toTranslate.isNotBlank() && !freeze) {
-                val translator = when(type) {
-                    Translation.CN_EN -> cnENTranslator
-                    Translation.EN_CN -> enCnTranslator
-                }
+                val translator = TranslationFactory.getTranslator(translation)
                 val translated = Tasks.await(translator.asyncTranslate(toTranslate))
                 Timber.d("Translated Text: $translated")
                 mutableLiveData.postValue(TranslationText(toTranslate, translated))
@@ -212,12 +172,6 @@ class OcrAnalyser(private val scannerOverlay: ScannerOverlay) : ImageAnalysis.An
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun close() {
-        enTextRecognizer.close()
-        cnTextRecognizer.close()
-    }
-
-    enum class Translation {
-        CN_EN,
-        EN_CN
+        TranslationFactory.close()
     }
 }

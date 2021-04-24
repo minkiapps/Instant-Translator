@@ -5,7 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Pair
 import com.huawei.hms.mlsdk.tts.*
+import com.minkiapps.livetranslator.translation.Translation
 import timber.log.Timber
+import kotlin.collections.HashMap
 
 class TTSWrapper {
 
@@ -13,12 +15,14 @@ class TTSWrapper {
     private lateinit  var mlENTtsEngine: MLTtsEngine
     private var ttsListener: TTSListener? = null
 
-    init {
-        createCNTtsEngine()
-        createENTtsEngine()
-    }
+    private val engineMap : HashMap<String, MLTtsEngine> = HashMap()
 
     private val handler = Handler(Looper.getMainLooper())
+
+    @Synchronized
+    fun speak(translation: Translation, text : String) {
+
+    }
 
     fun speakEnglish(text: String) {
         mlENTtsEngine.speak(text, MLTtsEngine.QUEUE_FLUSH)

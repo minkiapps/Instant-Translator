@@ -3,16 +3,26 @@
 
     <string name="hms_not_available">App can\'t be used because no HMS available on this device!</string>
 
+    <string name="language_de">DE</string>
+    <string name="language_en">EN</string>
+    <string name="language_cn">CN</string>
+
+    <string name="language_german">German</string>
+    <string name="language_english">English</string>
+    <string name="language_chinese">Chinese</string>
+
+    <string name="select_translation">Select Translation</string>
+
     <string name="freeze_text">Live</string>
     <string name="frozen_text">Frozen</string>
     <string name="freeze_text_tap">Tap anywhere to freeze text</string>
     <string name="unfreeze_text_tap">Tap anywhere to unfreeze text</string>
-    <string name="download_chinese_model_hint">Downloading Chinese translation model…</string>
-    <string name="download_english_model_hint">Downloading English translation model…</string>
+    <string name="download_translation_models_hint">Downloading translation models…</string>
     <string name="download_model_online_hint">In case you have no internet connection, make sure to connect to WIFI or mobile data and restart the application.</string>
 
     <string name="tooltip_show_move_tip">Drag inside to move the scan-rectangle.</string>
     <string name="tooltip_show_scale_tip">Drag at the corner to resize.</string>
+    <string name="tooltip_show_switch_language">Click to select translation.</string>
 
     <string name="recognised_text_hint">Scanned text appears here</string>
     <string name="translated_text_hint">Translated text appears here</string>

@@ -60,40 +60,23 @@
         tools:text="1.0.1 (10)" />
 
     <LinearLayout
-        android:layout_margin="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_margin="24dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:paddingVertical="16dp"
-            android:paddingHorizontal="8dp"
-            android:src="@drawable/ic_chinese"
-            app:tint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/ivActMainToggleTranslation"
+        <TextView
             android:background="?selectableItemBackgroundBorderless"
-            android:padding="16dp"
-            app:tint="@color/white"
-            android:src="@drawable/ic_baseline_arrow_right_alt_24"
+            android:id="@+id/tvActMainTranslation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:paddingVertical="16dp"
             android:paddingHorizontal="8dp"
-            app:tint="@color/white"
-            android:src="@drawable/ic_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:ignore="ContentDescription" />
+            android:paddingVertical="16dp"
+            android:textSize="24sp"
+            tools:ignore="ContentDescription"
+            tools:text="English \u2964 Chinese" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +102,7 @@
 
                 <TextView
                     android:layout_marginTop="64dp"
-                    android:id="@+id/tvActMainPreviewChinese"
+                    android:id="@+id/tvActMainPreviewFromLang"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -138,11 +121,13 @@
                     tools:ignore="ContentDescription" />
 
                 <TextView
-                    android:id="@+id/tvActMainPreviewEnglish"
+                    android:id="@+id/tvActMainPreviewToLang"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="64dp"
                     android:textSize="18sp"
                     android:textIsSelectable="true"
                     android:hint="@string/translated_text_hint" />
@@ -215,18 +200,18 @@
 
         <TextView
             android:layout_marginTop="32dp"
-            android:id="@+id/tvDownloadChineseModelHint"
+            android:id="@+id/tvDownloadTranslationModelsHint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
             android:gravity="center"
-            android:text="@string/download_chinese_model_hint"
+            android:text="@string/download_translation_models_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
-            android:id="@+id/pBActMainDownloadChineseModel"
+            android:id="@+id/pBActMainDownloadModels"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -234,31 +219,7 @@
             android:max="100"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDownloadChineseModelHint"
-            tools:progress="25" />
-
-        <TextView
-            android:layout_marginTop="32dp"
-            android:id="@+id/tvDownloadEnglishModelHint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:gravity="center"
-            android:text="@string/download_english_model_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pBActMainDownloadChineseModel" />
-
-        <ProgressBar
-            android:id="@+id/pBActMainDownloadEnglishModel"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:max="100"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDownloadEnglishModelHint"
+            app:layout_constraintTop_toBottomOf="@+id/tvDownloadTranslationModelsHint"
             tools:progress="25" />
 
         <TextView
@@ -270,7 +231,7 @@
             android:text="@string/download_model_online_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pBActMainDownloadEnglishModel" />
+            app:layout_constraintTop_toBottomOf="@+id/pBActMainDownloadModels" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

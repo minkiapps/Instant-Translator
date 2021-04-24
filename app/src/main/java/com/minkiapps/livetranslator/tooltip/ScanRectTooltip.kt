@@ -1,8 +1,13 @@
 package com.minkiapps.livetranslator.tooltip
 
 import android.content.Context
+import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.minkiapps.livetranslator.R
+import it.sephiroth.android.library.xtooltip.ClosePolicy
+import it.sephiroth.android.library.xtooltip.Tooltip
+import kotlinx.android.synthetic.main.activity_main.*
 
 class ScanRectTooltip(context : Context) {
 
@@ -27,11 +32,25 @@ class ScanRectTooltip(context : Context) {
         return true
     }
 
-    companion object {
-        private const val MAX_SHOW_DRAGGING_NO = 3
-        private const val SHOW_INTERVAL = 24 * 3600
+    fun buildDefaultToolTip(context: Context,
+                            tooltipText : String,
+                            anchorView : View,
+                            xOff : Int = 0,
+                            yOff : Int = 0) : Tooltip{
+        return Tooltip.Builder(context)
+            .anchor(anchorView, xOff, yOff, true)
+            .text(tooltipText)
+            .showDuration(2500L)
+            .closePolicy(ClosePolicy.TOUCH_NONE)
+            .floatingAnimation(Tooltip.Animation.DEFAULT)
+            .create()
+    }
 
-        private const val PREF_LAST_SHOWN_EPOCH = "PREF_LAST_SHOWN_EPOCH"
-        private const val PREF_MAX_SHOW_NO = "PREF_MAX_SHOW_NO"
+    companion object {
+        const val MAX_SHOW_DRAGGING_NO = 2
+        private const val SHOW_INTERVAL = 48 * 3600
+
+        const val PREF_LAST_SHOWN_EPOCH = "PREF_LAST_SHOWN_EPOCH"
+        const val PREF_MAX_SHOW_NO = "PREF_MAX_SHOW_NO"
     }
 }
