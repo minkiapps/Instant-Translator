@@ -29,4 +29,6 @@
 
     <string name="tts_no_internet">You need internet connection to use text to speech.</string>
 
+    <string name="share_app_title">Share App</string>
+    <string name="share_app_message">I\'ve found a really nice Translator App, check it out!\n\nGet the App on App Gallery https://appgallery1.huawei.com/#/app/C102732839</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.minkiapps.livetranslator
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Size
 import android.widget.ArrayAdapter
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         swActMainTextFreeze.setOnCheckedChangeListener { _, isChecked ->
+            ivActMainShareApp.isVisible = !isChecked
             analyser.freeze = isChecked
             ivMainTTS.isVisible = isHUAWEIManufacturer() && analyser.freeze
             tvActMainFreezeText.setHint(if (analyser.freeze) R.string.unfreeze_text_tap else R.string.freeze_text_tap)
@@ -160,6 +162,13 @@ class MainActivity : AppCompatActivity() {
                     view.tag = null
                 }
             }
+        }
+
+        ivActMainShareApp.setOnClickListener {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_message))
+                .setType("text/plain")
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app_title)))
         }
 
         startCamera()

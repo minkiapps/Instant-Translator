@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.huawei.hmf.tasks.Tasks
 import com.huawei.hms.mlsdk.model.download.MLLocalModelManager
 import com.huawei.hms.mlsdk.model.download.MLModelDownloadStrategy
 import com.huawei.hms.mlsdk.model.download.MLRemoteModel
@@ -57,34 +56,29 @@ class MainViewModel : ViewModel(), KoinComponent {
             Timber.d("Available Translator models: ${manager.getModels(MLLocalTranslatorModel::class.java).await()}")
         }
 
-        val modelExistsDeferred : MutableList<Deferred<Unit>> = ArrayList(mlLangModels.size * 2)
+        val modelExistsDeferred : MutableList<Deferred<Unit>> = ArrayList()
         mlLangModels.map { m ->
-            modelExistsDeferred.add(async {
-                if(!manager.isModelExist(m.translatorModel).await()) {
-                    modelDownLoadProgresses[m.translatorModel] = 0
-                }
-            })
 
-            modelExistsDeferred.add(async {
-                if(!manager.isModelExist(m.ttsModel).await()) {
-                    modelDownLoadProgresses[m.ttsModel] = 0
-                }
-            })
+            if(m.translatorModel.languageCode != "en") { //english is available by default and not download able
+                modelExistsDeferred.add(async {
+                    if(!manager.isModelExist(m.translatorModel).await()) {
+                        modelDownLoadProgresses[m.translatorModel] = 0
+                    }
+                })
+            }
+
+            ////TODO not work, models cant be downloaded, need to find out why
+            //modelExistsDeferred.add(async {
+            //    if(!manager.isModelExist(m.ttsModel).await()) {
+            //        modelDownLoadProgresses[m.ttsModel] = 0
+            //    }
+            //})
         }
         modelExistsDeferred.awaitAll()
 
         val deferredList = modelDownLoadProgresses.map { m ->
             async(Dispatchers.IO) {
-                try {
-                    downloadRemoteModel(m.key)
-                } catch (e : Exception) {
-                    if(BuildConfig.DEBUG) {
-                        Timber.e(e, "Failed to download ${m.key}")
-                    } else {
-                        throw e
-                    }
-                }
-
+                downloadRemoteModel(m.key)
                 onDownloadUpdateProgress(m.key, 100)
             }
         }
@@ -92,15 +86,15 @@ class MainViewModel : ViewModel(), KoinComponent {
         deferredList.awaitAll()
     }
 
-    private fun downloadRemoteModel(model: MLRemoteModel) {
-        Tasks.await(manager.downloadModel(
+    private suspend fun downloadRemoteModel(model: MLRemoteModel) {
+        manager.downloadModel(
             model,
             MLModelDownloadStrategy.Factory().create()
         ) { alreadyDownLength, totalLength ->
             onDownloadUpdateProgress(model, round(alreadyDownLength * 1f / totalLength * 100).toInt())
             val progress = modelDownLoadProgresses.map { it.value }.sum() / modelDownLoadProgresses.size
             downLoadProgressData.postValue(progress)
-        })
+        }.await()
     }
 
     private fun onDownloadUpdateProgress(model: MLRemoteModel, progress : Int) {
